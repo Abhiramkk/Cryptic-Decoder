@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cryptic Decoder Game</title>
+  <style>
+    body {
+      background: #0e0e0e;
+      color: #f8f8f8;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 2rem;
+      text-align: center;
+    }
+    .message-box {
+      background: #1f1f1f;
+      border: 1px solid #444;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 1rem auto;
+      width: 90%;
+      max-width: 600px;
+      transition: transform 0.3s ease;
+    }
+    .message-box:hover {
+      transform: scale(1.02);
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+      width: 80%;
+      border-radius: 6px;
+      border: none;
+      margin-top: 1rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      background: #2ecc71;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .hint {
+      margin-top: 0.5rem;
+      color: #3498db;
+    }
+    #timer {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #f39c12;
+      animation: pulse 1s infinite alternate;
+    }
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🧠 Cryptic Decoder Game</h1>
+  <div id="timer">Timer: 0s</div>
+
+  <div class="message-box">
+    <p><strong>Message 1:</strong> ▌▬▌ 3 ▌ ▌ ▌▌ |/\|0r|_|)</p>
+    <input type="text" id="input1" placeholder="Your guess..." />
+    <button onclick="checkAnswer(1, 'hello world')">Submit</button>
+    <div class="result" id="result1"></div>
+    <div class="hint" id="hint1"></div>
+  </div>
+
+  <div class="message-box">
+    <p><strong>Message 2:</strong> ▌=3-|-$|*3|<</p>
+    <input type="text" id="input2" placeholder="Your guess..." />
+    <button onclick="checkAnswer(2, 'finish him')">Submit</button>
+    <div class="result" id="result2"></div>
+    <div class="hint" id="hint2"></div>
+  </div>
+
+  <div class="message-box">
+    <p><strong>Message 3:</strong> Σ!╥▲ ㄚ0υr |)3(!$!0|\|$</p>
+    <input type="text" id="input3" placeholder="Your guess..." />
+    <button onclick="checkAnswer(3, 'mind your decisions')">Submit</button>
+    <div class="result" id="result3"></div>
+    <div class="hint" id="hint3"></div>
+  </div>
+
+  <script>
+    const hints = {
+      1: ["Two words", "Common first program", "It involves greeting"],
+      2: ["Two words", "Famous Mortal Kombat phrase", "Used after a victory"],
+      3: ["Three words", "Name of a YouTube channel", "Related to logic and puzzles"]
+    };
+
+    const attempts = { 1: 0, 2: 0, 3: 0 };
+
+    function checkAnswer(index, correctAnswer) {
+      const input = document.getElementById(`input${index}`).value.trim().toLowerCase();
+      const result = document.getElementById(`result${index}`);
+      const hint = document.getElementById(`hint${index}`);
+      attempts[index]++;
+
+      if (input === correctAnswer) {
+        result.textContent = '✅ Correct!';
+        result.style.color = '#2ecc71';
+        hint.textContent = '';
+      } else {
+        result.textContent = '❌ Try again...';
+        result.style.color = '#e74c3c';
+        const similarity = getSimilarity(input, correctAnswer);
+        hint.textContent = `Hint: ${hints[index][Math.min(attempts[index]-1, hints[index].length-1)]} | Similarity: ${similarity}%`;
+      }
+    }
+
+    function getSimilarity(a, b) {
+      let matches = 0;
+      for (let i = 0; i < Math.min(a.length, b.length); i++) {
+        if (a[i] === b[i]) matches++;
+      }
+      return Math.floor((matches / b.length) * 100);
+    }
+
+    // Timer
+    let seconds = 0;
+    const timerElement = document.getElementById('timer');
+    setInterval(() => {
+      seconds++;
+      timerElement.textContent = `Timer: ${seconds}s`;
+    }, 1000);
+  </script>
+</body>
+</html>
